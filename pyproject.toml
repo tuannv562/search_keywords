@@ -5,7 +5,7 @@ description = "A tool support get track id from search keywords"
 authors = ["Tuan Nguyen Vinh <tuannv562@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.7"
 openpyxl = "^3.0.3"
 requests = "^2.23.0"
 

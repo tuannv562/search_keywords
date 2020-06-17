@@ -8,7 +8,7 @@ INPUT_FILE_PATH = "/Users/vibbidi/Downloads/SEM_Keywords.xlsx"
 SEARCH_API = "https://api.vibbidi.net/api/v6/graphql"
 
 if __name__ == "__main__":
-    print("hello")
+    print("Reading excel file...")
     wb = load_workbook(INPUT_FILE_PATH)
     ws = wb.active
     search_query_template = """{{search(query: "{}") {{tracks(startPoint: 0, itemsToGet: 50) {{id title}}}}}}"""
@@ -16,6 +16,8 @@ if __name__ == "__main__":
     for row, cells in enumerate(ws.iter_rows(min_row=1, max_col=2)):
         if row == 0:
             continue
+        if row % 50 == 0:
+            print(f"Processed {row} keywords")
         row_data = []
         for col, cell in enumerate(cells):
             row_data.append(cell.value)
@@ -43,3 +45,4 @@ if __name__ == "__main__":
     for row in result:
         ws_result.append(row)
     wb.save(INPUT_FILE_PATH)
+    print("Finished. Please check result in excel file")

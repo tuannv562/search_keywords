@@ -12,12 +12,11 @@ if __name__ == "__main__":
     wb = load_workbook(INPUT_FILE_PATH)
     ws = wb.active
     search_query_template = """{{search(query: "{}") {{tracks(startPoint: 0, itemsToGet: 50) {{id title}}}}}}"""
-    result = []
+    ws_result = wb.create_sheet("Result")
+    ws_result.append(["URL", "Keywords", "Track ID", "Track Title"])
     for row, cells in enumerate(ws.iter_rows(min_row=1, max_col=2)):
         if row == 0:
             continue
-        if row % 50 == 0:
-            print(f"Processed {row} keywords")
         row_data = []
         for col, cell in enumerate(cells):
             row_data.append(cell.value)
@@ -30,19 +29,17 @@ if __name__ == "__main__":
                     row_result = deepcopy(row_data)
                     row_result.append(track_map.get("id"))
                     row_result.append(track_map.get("title"))
-                    result.append(row_result)
+                    ws_result.append(row_result)
             else:
                 row_data.append("")
                 row_data.append("")
-                result.append(row_data)
+                ws_result.append(row_data)
         else:
             row_data.append("")
             row_data.append("")
-            result.append(row_data)
+            ws_result.append(row_data)
+        if row % 50 == 0:
+            print(f"Processed {row} keywords")
+            wb.save(INPUT_FILE_PATH)
         time.sleep(1)
-    ws_result = wb.create_sheet("Result")
-    ws_result.append(["URL", "Keywords", "Track ID", "Track Title"])
-    for row in result:
-        ws_result.append(row)
-    wb.save(INPUT_FILE_PATH)
     print("Finished. Please check result in excel file")
